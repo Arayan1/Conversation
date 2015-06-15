@@ -1,15 +1,9 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
-<<<<<<< HEAD
-
-#include <windows.h> 
-#include <conio.h>
-=======
 #include <string.h>
 #include <windows.h>		//bool使うため
 #include <conio.h>			//_kbhit()を使うため
->>>>>>> fc7e82dc6a39f9fec919301eb653603b781744a0
 #include <time.h>
 
 #define NUMBER_GEN 10			// keywordAndAnswer.txtのキーワード数:20
@@ -112,11 +106,7 @@ int main(void){
 
 		while (1){
 			if (_kbhit()){
-<<<<<<< HEAD
 				scanf("%s",input);
-=======
-				scanf("%s", input);
->>>>>>> fc7e82dc6a39f9fec919301eb653603b781744a0
 				break;
 			}
 			count++;
