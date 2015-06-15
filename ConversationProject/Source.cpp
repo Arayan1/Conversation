@@ -1,9 +1,15 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
+<<<<<<< HEAD
 
 #include <windows.h> 
 #include <conio.h>
+=======
+#include <string.h>
+#include <windows.h>		//bool使うため
+#include <conio.h>			//_kbhit()を使うため
+>>>>>>> fc7e82dc6a39f9fec919301eb653603b781744a0
 #include <time.h>
 
 #define NUMBER_GEN 10			// keywordAndAnswer.txtのキーワード数:20
@@ -84,7 +90,7 @@ int main(void){
 	/*
 	// 用意されているデータの確認用に表示
 	for (int i = 0; i < numberOfKeyword; i++){
-		printf("%s %s %s %s\n", general[i].keyword, general[i].answerQ1, general[i].answerQ2, general[i].answerP);
+	printf("%s %s %s %s\n", general[i].keyword, general[i].answerQ1, general[i].answerQ2, general[i].answerP);
 	}
 
 	for (int i = 0; i < numberOfGreeting; i++){
@@ -106,7 +112,11 @@ int main(void){
 
 		while (1){
 			if (_kbhit()){
+<<<<<<< HEAD
 				scanf("%s",input);
+=======
+				scanf("%s", input);
+>>>>>>> fc7e82dc6a39f9fec919301eb653603b781744a0
 				break;
 			}
 			count++;
@@ -116,7 +126,7 @@ int main(void){
 			}
 		}
 
-
+		//挨拶
 		for (int i = 0; i < numberOfGreeting; i++){
 			if (strstr(input, greeting[i]) != NULL)
 			{
@@ -128,11 +138,13 @@ int main(void){
 
 		if (greetingFlag == 0){
 
+			// 終了するとき↓
 			if (strstr(input, "bye") != NULL) {
 				printf("KISTくん: bye-bye! (^-^)/~~ \n");
 				break;
 			}
 
+			//疑問文に対応↓
 			if (checkQ(input)){
 
 				for (int i = 0; i < numberOfKeyword; i++){
@@ -143,9 +155,9 @@ int main(void){
 					}
 					counter++;
 				}
-				if (counter == numberOfKeyword)printf("KISTくん: ・・・。\n");
+				if (counter == numberOfKeyword)printf("KISTくん: ・・・。\n");	//キーワードがなかったら kist: ･･･
 			}
-
+			//肯定文に対応↓
 			else {
 				for (int i = 0; i < numberOfKeyword; i++){
 					if (strstr(input, general[i].keyword) != NULL)
@@ -162,6 +174,7 @@ int main(void){
 
 	fclose(fpGen);
 	fclose(fpGr);
+	fclose(fpEn);
 
 	return 0;
 
