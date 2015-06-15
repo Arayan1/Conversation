@@ -1,8 +1,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
-#include <string.h>
-#include <windows.h>
+
+#include <windows.h> 
 #include <conio.h>
 #include <time.h>
 
@@ -80,6 +80,7 @@ int main(void){
 		numberOfEncourage++;
 	}
 
+
 	/*
 	// 用意されているデータの確認用に表示
 	for (int i = 0; i < numberOfKeyword; i++){
@@ -105,7 +106,7 @@ int main(void){
 
 		while (1){
 			if (_kbhit()){
-				gets(input);
+				scanf("%s",input);
 				break;
 			}
 			count++;
