@@ -1,30 +1,31 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "DxLib.h"
-#include <windows.h>		//bool使うため
+#include <windows.h>
 #include <time.h>
 
 #define NUMBER_GEN 10			// keywordAndAnswer.txtのキーワード数:20
 #define NUMBER_GR 20			// greeting.txtのキーワード数:20
 #define NUMBER_EN 20			// encourage.txtのキーワード数:20
 
-typedef struct Respond {		// キーワードに応じて、疑問に対する答えと肯定文に対するコメントを用意
-	char keyword[11];			// 全角5文字まで入力可
-	char answerQ1[41];		// 全角20文字まで入力可
-	char answerQ2[31];		// 全角15文字まで入力可
-	char answerP[31];			// 全角15文字まで入力可
+
+typedef struct Respond {
+	char keyword[11];
+	char answerQ1[41];
+	char answerQ2[41];
+	char answerP[41];
 }Respond;
 
-bool checkQ(char str[]){		// 疑問形かどうかチェックする関数
+bool checkQ(char str[]){        // 疑問形かどうかチェックする関数
 
-	char strQ1[] = "か";		// 疑問形かどうかチェックする文字
-	char strQ2[] = "?";		// 疑問形かどうかチェックする文字
+	char strQ1[] = "か"; // 疑問形かどうかチェックする文字
+	char strQ2[] = "?"; // 疑問形かどうかチェックする文字
 
 	//一致しない場合はNULL
-	if ((strstr(str, strQ1) != NULL) | (strstr(str, strQ2) != NULL)) return TRUE;
+	if ((strstr(str, strQ1) != NULL) | (strstr(str, strQ2) != NULL)) return
+		TRUE;
 	else return FALSE;
 }
-
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 	lpCmdLine, int nCmdShow)
@@ -58,6 +59,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 	int greetingFlag = 0;
 	int flag = 0;
 	int EndFlag = 0;
+	int shakeFlag = 0;
 
 	// キー入力ハンドル用
 	int InputHandle;
@@ -112,7 +114,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 
 		ClearDrawScreen();
 
-		DrawGraph(170, 20, Handle, TRUE);
+		if (shakeFlag == 1){
+			DrawGraph(166 + 10 * (count % 2), 20, Handle, TRUE);
+
+		}
+		else DrawGraph(170, 20, Handle, TRUE);
+
 		DrawString(170, 400, "あなた:", White);
 
 		if (flag == 0){
@@ -127,6 +134,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 			CheckKeyInput(InputHandle);
 
 			DrawFormatString(170, 280, Red, "KISTくん: %s", input);
+
+
 
 			if (EndFlag == 1)
 			{
@@ -143,9 +152,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 			if (count % 200 == 0){
 				random = rand() % numberOfEncourage;	// 0 ～ (numberOfEncourage-1)の間のランダム値生成
 				strcpy(input, encourage[random]);
-				if ((random == 2) | (random == 4))
+				if ((random == 2) | (random == 4)){
 					Handle = LoadGraph("angryKoala.jpg");
-				else Handle = LoadGraph("Koala.jpg");
+					shakeFlag = 1;
+				}
+				else {
+					Handle = LoadGraph("Koala.jpg");
+					shakeFlag = 0;
+				}
+
 			}
 
 			// 入力が終了している場合は終了
