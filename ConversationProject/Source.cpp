@@ -51,6 +51,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 
 	char input[41] = "何か話しかけて!";
 
+	int Cr = GetColor(255, 255, 255);
 	int judge = 0;
 	int count = 0;
 	int counter = 0;
@@ -104,7 +105,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 	int Handle;     // 画像入力ハンドル用
 	Handle = LoadGraph("Koala.jpg"); // 画像をロード
 
-	// キー入力ハンドルを作る(キャンセルなし全角文字有り数値入力じゃなし)
+	// キー入力ハンドルを作る(キャンセルなし全角文字有り数値入力なし)
 	InputHandle = MakeKeyInput(50, FALSE, FALSE, FALSE);
 
 	while (ProcessMessage() == 0)
@@ -120,7 +121,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 		}
 		else DrawGraph(170, 20, Handle, TRUE);
 
-		DrawString(170, 400, "あなた:", White);
+		DrawString(170, 420, "あなた:", White);
+		DrawBox(170, 450, 470, 400, Cr, FALSE);    // 四角形を描
+
+		DrawBox(170, 310, 470, 260, Cr, FALSE);    // 四角形を描
 
 		if (flag == 0){
 
@@ -145,7 +149,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 			}
 
 			// 入力途中の文字列を描画
-			DrawKeyInputString(230, 400, InputHandle);
+			DrawKeyInputString(230, 420, InputHandle);
 
 			count++;
 
@@ -173,13 +177,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 				// 入力された文字列を取得
 				strcpy(input, "");
 				GetKeyInputString(input, InputHandle);
-
+				
+				
 				// 用済みのインプットハンドルを削除する
 				DeleteKeyInput(InputHandle);
-
-				// キー入力ハンドルを作る(キャンセルなし全角文字有り数値入力じゃなし)
+				
+				
+				// キー入力ハンドルを作る(キャンセルなし全角文字有り数値入力なし)
 				InputHandle = MakeKeyInput(50, FALSE, FALSE, FALSE);
-
+				
 
 				for (int i = 0; i < numberOfGreeting; i++){
 					if (strstr(input, greeting[i]) != NULL)
