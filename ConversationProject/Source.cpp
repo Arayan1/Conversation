@@ -51,6 +51,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 
 	char input[41] = "‰½‚©˜b‚µ‚©‚¯‚Ä!";
 
+	int Cr = GetColor(255, 255, 255);
 	int judge = 0;
 	int count = 0;
 	int counter = 0;
@@ -120,7 +121,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 		}
 		else DrawGraph(170, 20, Handle, TRUE);
 
-		DrawString(170, 400, "‚ ‚È‚½:", White);
+		DrawString(170, 420, "‚ ‚È‚½:", White);
+		DrawBox(170, 450, 470, 400, Cr, FALSE);    // ŽlŠpŒ`‚ð•`
+
+		DrawBox(170, 310, 470, 260, Cr, FALSE);    // ŽlŠpŒ`‚ð•`
 
 		if (flag == 0){
 
@@ -145,7 +149,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 			}
 
 			// “ü—Í“r’†‚Ì•¶Žš—ñ‚ð•`‰æ
-			DrawKeyInputString(230, 400, InputHandle);
+			DrawKeyInputString(230, 420, InputHandle);
 
 			count++;
 
