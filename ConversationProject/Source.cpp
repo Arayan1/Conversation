@@ -152,11 +152,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 
 			}
 
-
 			CheckKeyInput(InputHandle);
 
 
-			if ((count % 5 == 0) && (charCount <= elementCount - 2)){
+			if ((count % 6 == 0) && (charCount <= elementCount - 2)){
 
 				buffInput[charCount] = input[charCount];
 				buffInput[charCount + 1] = input[charCount + 1];
@@ -167,11 +166,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 
 			DrawFormatString(170, 280, Red, "KIST‚­‚ñ: %s", buffInput);
 
-			if (EndFlag == 1)
-			{
-				ScreenFlip();
-				Sleep(2000);
-				break;
+			if (EndFlag == 1){
+
+				if (charCount == elementCount - 2){
+
+					ScreenFlip();
+					Sleep(2000);
+					break;
+				}
 			}
 
 			// “ü—Í“r’†‚Ì•¶Žš—ñ‚ð•`‰æ
