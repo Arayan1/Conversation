@@ -50,12 +50,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 	int numberOfEncourage = 0;
 
 	char input[41] = "何か話しかけて!";
+	char buffInput[40];
+	buffInput[0] = '\0';
 
 	int Cr = GetColor(255, 255, 255);
 	int judge = 0;
 	int count = 0;
 	int counter = 0;
 	int random = 0;
+	int charCount = 0;
+	int elementCount = 0;
 
 	int greetingFlag = 0;
 	int flag = 0;
@@ -66,6 +70,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 	int InputHandle;
 	int Red = GetColor(255, 0, 0);
 	int White = GetColor(255, 255, 255);
+
+	char endChar = '\0';
+	char element = '@';
 
 	// ランダム値生成用
 	srand((unsigned int)time(NULL));
@@ -105,7 +112,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 	int Handle;     // 画像入力ハンドル用
 	Handle = LoadGraph("Koala.jpg"); // 画像をロード
 
-	// キー入力ハンドルを作る(キャンセルなし全角文字有り数値入力じゃなし)
+	// キー入力ハンドルを作る(キャンセルなし全角文字有り数値入力なし)
 	InputHandle = MakeKeyInput(50, FALSE, FALSE, FALSE);
 
 	while (ProcessMessage() == 0)
@@ -135,11 +142,30 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 
 		if (flag == 1){
 
+			// 配列inputの'\0'の位置取得(1からスタート)
+
+			while (endChar != element){
+
+				element = input[elementCount];
+
+				elementCount++;
+
+			}
+
+
 			CheckKeyInput(InputHandle);
 
-			DrawFormatString(170, 280, Red, "KISTくん: %s", input);
 
+			if ((count % 5 == 0) && (charCount <= elementCount - 2)){
 
+				buffInput[charCount] = input[charCount];
+				buffInput[charCount + 1] = input[charCount + 1];
+				buffInput[charCount + 2] = '\0';
+
+				charCount += 2;
+			}
+
+			DrawFormatString(170, 280, Red, "KISTくん: %s", buffInput);
 
 			if (EndFlag == 1)
 			{
@@ -156,6 +182,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 			if (count % 200 == 0){
 				random = rand() % numberOfEncourage;	// 0 ～ (numberOfEncourage-1)の間のランダム値生成
 				strcpy(input, encourage[random]);
+				charCount = 0;
+				element = '@';
+				elementCount = 0;
 				if ((random == 2) | (random == 4)){
 					Handle = LoadGraph("angryKoala.jpg");
 					shakeFlag = 1;
@@ -170,18 +199,24 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 			// 入力が終了している場合は終了
 			if (CheckKeyInput(InputHandle) != 0){
 
+				strstr(buffInput, "@");
+				element = '@';
 				flag = 0;
 				count = 0;
+				charCount = 0;
+				elementCount = 0;
 				Handle = LoadGraph("Koala.jpg");
 
 				// 入力された文字列を取得
 				strcpy(input, "");
 				GetKeyInputString(input, InputHandle);
 
+
 				// 用済みのインプットハンドルを削除する
 				DeleteKeyInput(InputHandle);
 
-				// キー入力ハンドルを作る(キャンセルなし全角文字有り数値入力じゃなし)
+
+				// キー入力ハンドルを作る(キャンセルなし全角文字有り数値入力なし)
 				InputHandle = MakeKeyInput(50, FALSE, FALSE, FALSE);
 
 
