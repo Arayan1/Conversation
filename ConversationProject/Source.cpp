@@ -255,7 +255,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 								counter++;
 							}
 
-							if (counter == numberOfKeyword)strcpy(input, "・・・。");
+							if (counter == numberOfKeyword)strcpy(input, "言いたくないな・・・。");
 						}
 
 						else {
@@ -268,7 +268,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 								counter++;
 							}
 
-							if (counter == numberOfKeyword)strcpy(input, "・・・。");
+							if (counter == numberOfKeyword)strcpy(input, "それについては興味ない。");
 						}
 					}
 				}
