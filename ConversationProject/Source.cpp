@@ -30,6 +30,7 @@ bool checkQ(char str[]){        // 疑問形かどうかチェックする関数
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 	lpCmdLine, int nCmdShow)
 {
+	SetGraphMode(800, 600, 32);
 	ChangeWindowMode(true);
 
 	if (DxLib_Init() == -1)        // ＤＸライブラリ初期化処理
@@ -70,6 +71,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 	int InputHandle;
 	int Red = GetColor(255, 0, 0);
 	int White = GetColor(255, 255, 255);
+	int Black = GetColor(0, 0, 0);
 
 	char endChar = '\0';
 	char element = '@';
@@ -110,7 +112,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 	}
 
 	int Handle;     // 画像入力ハンドル用
-	Handle = LoadGraph("Koala.jpg"); // 画像をロード
+	Handle = LoadGraph("char1.png"); // 画像をロード
+
+	int Handle1;
+	Handle1 = LoadGraph("background.jpg"); // 画像をロード
 
 	// キー入力ハンドルを作る(キャンセルなし全角文字有り数値入力なし)
 	InputHandle = MakeKeyInput(50, FALSE, FALSE, FALSE);
@@ -122,16 +127,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 
 		ClearDrawScreen();
 
+		DrawGraph(0, 0, Handle1, TRUE);
+
 		if (shakeFlag == 1){
 			DrawGraph(166 + 10 * (count % 2), 20, Handle, TRUE);
 
 		}
 		else DrawGraph(170, 20, Handle, TRUE);
 
-		DrawString(170, 420, "あなた:", White);
-		DrawBox(170, 450, 470, 400, Cr, FALSE);    // 四角形を描
-
-		DrawBox(170, 310, 470, 260, Cr, FALSE);    // 四角形を描
+		DrawString(150, 500, "あなた:", Black);
+		
 
 		if (flag == 0){
 
@@ -164,7 +169,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 				charCount += 2;
 			}
 
-			DrawFormatString(170, 280, Red, "KISTくん: %s", buffInput);
+			DrawFormatString(510, 150, Red, "KISTくん: %s", buffInput);
 
 			if (EndFlag == 1){
 
@@ -177,7 +182,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 			}
 
 			// 入力途中の文字列を描画
-			DrawKeyInputString(230, 420, InputHandle);
+			DrawKeyInputString(210, 500, InputHandle);
 
 			count++;
 
@@ -192,7 +197,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 					shakeFlag = 1;
 				}
 				else {
-					Handle = LoadGraph("Koala.jpg");
+					Handle = LoadGraph("char1.png");
 					shakeFlag = 0;
 				}
 
@@ -207,7 +212,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 				count = 0;
 				charCount = 0;
 				elementCount = 0;
-				Handle = LoadGraph("Koala.jpg");
+				Handle = LoadGraph("char1.png");
 
 				// 入力された文字列を取得
 				strcpy(input, "");
