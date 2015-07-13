@@ -169,7 +169,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 				charCount += 2;
 			}
 
-			DrawFormatString(510, 150, Red, "KIST‚­‚ñ: %s", buffInput);
+			DrawFormatString(510, 150, Black, "KIST‚­‚ñ: %s", buffInput);
 
 			if (EndFlag == 1){
 
@@ -183,7 +183,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 
 			// “ü—Í“r’†‚Ì•¶Žš—ñ‚ð•`‰æ
 			DrawKeyInputString(210, 500, InputHandle);
-
+			SetKeyInputStringColor(Black, FALSE, White, FALSE, FALSE, White, FALSE, FALSE, FALSE, FALSE);
 			count++;
 
 			if (count % 200 == 0){
