@@ -56,7 +56,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 	int numberOfGreeting = 0;			// 実際のgreeting.txtのキーワード数
 	int numberOfEncourage = 0;		// 実際のencourage.txtのキーワード数
 
-	char input[41] = "何か話しかけて!";	// 「Kistくん」に表示させる文字列格納用
+	char input[41] = "何か話しかけて！";	// 「Kistくん」に表示させる文字列格納用
 	char buffInput[40];					// 一文字ずつ画面に表示させていくために用意
 	buffInput[0] = '\0';
 
@@ -68,8 +68,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 	int elementCount = 0;
 
 	int greetingFlag = 0;
-	int flag = 0;
-	int EndFlag = 0;
+	int flag = 0;		// ユーザーの入力が終了したかどうか判断するために用意(入力中flagは「1」)
+	int EndFlag = 0;		// byeを含む文字列が入力されたときEndFlagを「1」とし終了処理
 	int shakeFlag = 0;
 
 	// キー入力ハンドル用
@@ -88,7 +88,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 	srand((unsigned int)time(NULL));
 
 	fpKey = fopen("keywordAndAnswer.txt", "r");
-	fpGr = fopen("greeting.txt", "r");
+	fpGr = fopen("greeting.txt", "r");	
 	fpEn = fopen("encourage.txt", "r");
 
 	// ファイルがオープンできない場合の処理
@@ -119,10 +119,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 
 	// 画像入力ハンドル
 	int Handle;    
-	Handle = LoadGraph("char1.png");			// 画像をロード
+	Handle = LoadGraph("char1.png");			// Kistくん画像をロード
 
 	int Handle1;
-	Handle1 = LoadGraph("background.jpg");		// 画像をロード
+	Handle1 = LoadGraph("background.jpg");		// 背景画像をロード
 
 	// キー入力ハンドル(キャンセルなし全角文字有り数値入力なし)
 	InputHandle = MakeKeyInput(50, FALSE, FALSE, FALSE);
@@ -135,16 +135,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 
 		ClearDrawScreen();
 
+		// 背景描画
 		DrawGraph(0, 0, Handle1, TRUE);
 
-		if (shakeFlag == 1){
-			DrawGraph(166 + 10 * (frameCount % 2), 20, Handle, TRUE);
-
-		}
-		else DrawGraph(170, 20, Handle, TRUE);
-
 		DrawString(150, 500, "あなた:", Black);
-		
 
 		if (flag == 0){
 
@@ -153,22 +147,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 
 		}
 
+		// ユーザー入力中(入力待ち)のとき
 		if (flag == 1){
 
 			// 配列inputの要素から終端文字'\0'の位置取得(1からスタート)
-
 			while (endChar != element){
 
 				element = input[elementCount];
-
 				elementCount++;
-
 			}
 
-			CheckKeyInput(InputHandle);
-
-
-			if ((frameCount % 6 == 0) && (charCount <= elementCount - 2)){
+			// 配列inputから配列buffInputに1文字(全角)ずつ追加していく
+			if ((frameCount % 6 == 0) && (charCount <= elementCount - 3)){
 
 				buffInput[charCount] = input[charCount];
 				buffInput[charCount + 1] = input[charCount + 1];
@@ -177,31 +167,51 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 				charCount += 2;
 			}
 
+			// 配列buffInputに格納された文字列を表示
 			DrawFormatString(510, 150, Black, "KISTくん: %s", buffInput);
 
+
+			// shakeFlagが「1」のときは、Kistくんを左右に揺らす
+			if (shakeFlag == 1){
+				if ((frameCount % 8) <= 3){
+					DrawGraph(166, 20, Handle, TRUE);
+				}
+				else {
+					DrawGraph(176, 20, Handle, TRUE);
+				}
+			}
+			else DrawGraph(170, 20, Handle, TRUE);		// shakeFlagが「0」ときは通常描画(静止画)
+
+			// 終了処理
 			if (EndFlag == 1){
+				if (charCount == elementCount-1){
 
-				if (charCount == elementCount - 2){
-
-					ScreenFlip();
 					Sleep(2000);
 					break;
 				}
 			}
 
-			// 入力途中の文字列を描画
+			
+
+			// ユーザーの入力途中の文字列を描画
 			DrawKeyInputString(210, 500, InputHandle);
 			SetKeyInputStringColor(Black, FALSE, White, FALSE, FALSE, White, FALSE, FALSE, FALSE, FALSE);
 			frameCount++;
 
+			// 一定時間返答がないと、会話を促す文字列を表示させる
 			if (frameCount % 200 == 0){
 				random = rand() % numberOfEncourage;	// 0 ～ (numberOfEncourage-1)の間のランダム値生成
-				strcpy(input, encourage[random]);
+				strcpy(input, encourage[random]);		// 会話を促す文字列をinputに格納
+				
+				// 各変数を初期化
 				charCount = 0;
 				element = '@';
 				elementCount = 0;
+
+				// encourage.txtにおいて、3番目と5番目に書かれた文字列(「トークトーク!」と「いいかげん話せ！」)に対しては、
+				// 「angry.png」の画像を対応させ、shakeFlagを「1」とする
 				if ((random == 2) | (random == 4)){
-					Handle = LoadGraph("angryKoala.jpg");
+					Handle = LoadGraph("angry.png");
 					shakeFlag = 1;
 				}
 				else {
@@ -211,30 +221,29 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 
 			}
 
-			// 入力が終了している場合は終了
+			// 入力が終了したとき
 			if (CheckKeyInput(InputHandle) != 0){
 
-				strstr(buffInput, "@");
+				// 各変数または配列を初期化
 				element = '@';
 				flag = 0;
+				shakeFlag = 0;
 				frameCount = 0;
 				charCount = 0;
 				elementCount = 0;
 				Handle = LoadGraph("char1.png");
 
-				// 入力された文字列を取得
+				// 入力された文字列をinputに格納
 				strcpy(input, "");
 				GetKeyInputString(input, InputHandle);
-
 
 				// 用済みのインプットハンドルを削除する
 				DeleteKeyInput(InputHandle);
 
-
 				// キー入力ハンドルを作る(キャンセルなし全角文字有り数値入力なし)
 				InputHandle = MakeKeyInput(50, FALSE, FALSE, FALSE);
 
-
+				// ユーザーによって入力された文字列(input)の中に、greeting.txtに書かれた文字列が存在するか探す(あればgreetingFlagを「1」とする)
 				for (int i = 0; i < numberOfGreeting; i++){
 					if (strstr(input, greeting[i]) != NULL)
 					{
@@ -243,38 +252,68 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 					}
 				}
 
-				if (greetingFlag == 0){
+				if (greetingFlag == 0){					
 
+					// 入力された文字列に「bye」の文字列があれば、配列inputに「バイバイ・・・」を格納し、画像sad.pngをロードする
 					if (strstr(input, "bye") != NULL) {
-						char bye[41] = "バイバ～イ!";
+						char bye[41] = "バイバイ・・・";
 						strcpy(input, bye);
-						Handle = LoadGraph("byeKoala.jpg");
+						Handle = LoadGraph("sad.png");
 						EndFlag = 1;
 					}
+
+					// 入力された文字列に「bye」の文字列がないとき
 					if (EndFlag != 1){
+
+						// 入力されたものが疑問形かどうかチェック
 						if (checkQ(input)){
 
+							// ユーザーによって入力された文字列(input)の中に、keywordAndAnswer.txtに書かれたキーワードが存在するか探す
 							for (int i = 0; i < numberOfKeyword; i++){
 								if (strstr(input, keyword[i].keyword) != NULL)
 								{
-									strcpy(input, keyword[i].answerQ1);
+									strcpy(input, keyword[i].answerQ1);		// そのキーワードに対応する、疑問形に対する答え(answerQ1)を配列inputに格納
+									
+									switch (i){
+
+									case 1:
+									case 2: Handle = LoadGraph("happy.png");
+											break;
+									case 3:
+									case 4:
+									case 5: Handle = LoadGraph("sad.png");
+											break;
+									}
+									
 									break;
 								}
 
+								// ユーザーによって入力された文字列の中に、keywordAndAnswer.txtに書かれたキーワードが存在しないとき
+								// 「言いたくないな・・・」をinputに格納し、質問をかわす
 								if (i == numberOfKeyword - 1)strcpy(input, "言いたくないな・・・。");
 
 							}
 						}
 
+						// 入力されたものが疑問形でないとき
 						else {
+
+							// ユーザーによって入力された文字列(input)の中に、keywordAndAnswer.txtに書かれたキーワードが存在するか探す
 							for (int i = 0; i < numberOfKeyword; i++){
 								if (strstr(input, keyword[i].keyword) != NULL)
 								{
-									strcpy(input, keyword[i].answerP);
+									strcpy(input, keyword[i].answerP);			// そのキーワードに対応する、肯定形に対する答え(answerP)を配列inputに格納
+									
+									if ((i == 1) | (i == 2) | (i == 8)){
+										Handle = LoadGraph("happy.png");
+									}
+
 									break;
 								}
 
-								if (i == numberOfKeyword - 1)strcpy(input, "それについては興味ない。");
+								// ユーザーによって入力された文字列の中に、keywordAndAnswer.txtに書かれたキーワードが存在しないとき
+								// 「・・・。」をinputに格納し、だんまりを決め込む
+								if (i == numberOfKeyword - 1)strcpy(input, "・・・。");
 							}
 						}
 					}
