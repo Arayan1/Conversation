@@ -119,7 +119,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 
 	// 画像入力ハンドル
 	int Handle;    
-	Handle = LoadGraph("char1.png");			// Kistくん画像をロード
+	Handle = LoadGraph("chardefo.png");			// Kistくん画像をロード
 
 	int Handle1;
 	Handle1 = LoadGraph("background.jpg");		// 背景画像をロード
@@ -215,7 +215,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 					shakeFlag = 1;
 				}
 				else {
-					Handle = LoadGraph("char1.png");
+					Handle = LoadGraph("chardefo.png");
 					shakeFlag = 0;
 				}
 
@@ -231,7 +231,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 				frameCount = 0;
 				charCount = 0;
 				elementCount = 0;
-				Handle = LoadGraph("char1.png");
+				Handle = LoadGraph("chardefo.png");
 
 				// 入力された文字列をinputに格納
 				strcpy(input, "");
