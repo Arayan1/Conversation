@@ -71,6 +71,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 	int flag = 0;		// ユーザーの入力が終了したかどうか判断するために用意(入力中flagは「1」)
 	int EndFlag = 0;		// byeを含む文字列が入力されたときEndFlagを「1」とし終了処理
 	int shakeFlag = 0;
+	int leftMoveFlag = 0; //住所の表示をずらすフラグ
 
 	// キー入力ハンドル用
 	int InputHandle;
@@ -124,6 +125,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 	int Handle1;
 	Handle1 = LoadGraph("background.jpg");		// 背景画像をロード
 
+	int Handle2;
+	Handle2 = LoadGraph("waku.png");		// 枠をロード
+
+	int Handle3;
+	Handle3 = LoadGraph("hukidasi.png");		// ふきだしをロード
+
 	// キー入力ハンドル(キャンセルなし全角文字有り数値入力なし)
 	InputHandle = MakeKeyInput(50, FALSE, FALSE, FALSE);
 
@@ -138,7 +145,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 		// 背景描画
 		DrawGraph(0, 0, Handle1, TRUE);
 
-		DrawString(150, 500, "あなた:", Black);
+		DrawGraph(0, 0, Handle3, TRUE);
+
 
 		if (flag == 0){
 
@@ -167,20 +175,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 				charCount += 2;
 			}
 
-			// 配列buffInputに格納された文字列を表示
-			DrawFormatString(510, 150, Black, "KISTくん: %s", buffInput);
+
+				DrawFormatString(540, 75, Black, "%s", buffInput);
 
 
 			// shakeFlagが「1」のときは、Kistくんを左右に揺らす
 			if (shakeFlag == 1){
 				if ((frameCount % 8) <= 3){
+					
 					DrawGraph(166, 20, Handle, TRUE);
+					DrawGraph(0, 18, Handle2, TRUE);
+					DrawString(150, 500, "あなた:", Black);
 				}
 				else {
+					
 					DrawGraph(176, 20, Handle, TRUE);
+					DrawGraph(0, 18, Handle2, TRUE);
+					DrawString(150, 500, "あなた:", Black);
+
 				}
 			}
-			else DrawGraph(170, 20, Handle, TRUE);		// shakeFlagが「0」ときは通常描画(静止画)
+			else {
+				DrawGraph(170, 20, Handle, TRUE);// shakeFlagが「0」ときは通常描画(静止画)
+				DrawGraph(0, 18, Handle2, TRUE);
+				DrawString(150, 500, "あなた:", Black);
+			}
 
 			// 終了処理
 			if (EndFlag == 1){
@@ -272,6 +291,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR
 							for (int i = 0; i < numberOfKeyword; i++){
 								if (strstr(input, keyword[i].keyword) != NULL)
 								{
+									if (strstr(input,"住所")){
+										leftMoveFlag = 1;
+									}
+
 									strcpy(input, keyword[i].answerQ1);		// そのキーワードに対応する、疑問形に対する答え(answerQ1)を配列inputに格納
 									
 									switch (i){
